@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000" >
+    <!-- 拍照的预览 -->
+    <SurfaceView
+        android:id="@+id/svPreView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <!-- 下面4个 textview 对拍照区域遮挡，达到适合需要图片的比例 ，拍照后会裁剪掉这4个 textview 覆盖着的像素 -->
+    <TextView
+        android:id="@+id/tvLeft"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="#000" />
+    <TextView
+        android:id="@+id/tvTop"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
+        android:background="#000" />
+    <TextView
+        android:id="@+id/tvRight"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="#000" />
+    <TextView
+        android:id="@+id/tvBottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:background="#000" />
+    <!-- 拍照后的预览图片 -->
+    <ImageView
+        android:id="@+id/ivPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tvBottom"
+        android:layout_below="@id/tvTop"
+        android:layout_toLeftOf="@id/tvRight"
+        android:layout_toRightOf="@id/tvLeft"
+        android:scaleType="fitXY" />
+    <!-- 闪光灯 -->
+    <TextView
+        android:id="@+id/btFlash"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/camera_flash_off" />
+    <!-- 切换前后摄像头 -->
+    <ImageView
+        android:id="@+id/btnChange"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/camera_change" />
+    <!-- 拍照按钮 -->
+    <TextView
+        android:id="@+id/tvTakePhoto"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/camera_take_up" />
+    <!-- 重拍按钮 -->
+    <TextView
+        android:id="@+id/tvRemake"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignLeft="@id/tvTakePhoto"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="重拍"
+        android:textColor="#fff"
+        android:textSize="16dp" />
+    <!-- 取消返回上一个界面 -->
+    <TextView
+        android:id="@+id/tvCancel"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignLeft="@id/tvTakePhoto"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/camera_cancel" />
+    <!-- 保存这张图拍下一张，如果已经到达最大数量则返回 -->
+    <TextView
+        android:id="@+id/tvSave"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_alignLeft="@id/tvTakePhoto"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="保存"
+        android:textColor="#fff"
+        android:textSize="16dp" />
+</RelativeLayout>
