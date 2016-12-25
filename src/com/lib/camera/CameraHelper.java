@@ -44,7 +44,7 @@ import com.lib.utils.LogUtils;
 
 /**
  * initCamera调用这一句话，可以从返回的callback里拿到camera并且设置点击对焦和测光
- *
+ * 
  * @author dsr
  */
 public class CameraHelper {
@@ -58,11 +58,16 @@ public class CameraHelper {
 	}
 
 	/**
-	 * @param parameters    相机的参数
-	 * @param previewWidth  预览的最大宽
-	 * @param previewHeight 预览的最大高
-	 * @param picWidth      拍取图片的最小宽
-	 * @param picHeight     拍取图片的最小高
+	 * @param parameters
+	 *            相机的参数
+	 * @param previewWidth
+	 *            预览的最大宽
+	 * @param previewHeight
+	 *            预览的最大高
+	 * @param picWidth
+	 *            拍取图片的最小宽
+	 * @param picHeight
+	 *            拍取图片的最小高
 	 */
 	public void setSize(Parameters parameters, int previewWidth, int previewHeight, int picWidth, int picHeight) {
 		List<Size> picsizes = parameters.getSupportedPictureSizes();
@@ -76,9 +81,9 @@ public class CameraHelper {
 				return rhs.width - lhs.width;
 			}
 		};
-		Collections.sort(previewSizes, b2sSize);//从大到小排序
+		Collections.sort(previewSizes, b2sSize);// 从大到小排序
 		Collections.sort(picsizes, b2sSize);
-		while (previewSizes.size() > 1) {//去除小于预览大小的size
+		while (previewSizes.size() > 1) {// 去除小于预览大小的size
 			int lastOne = previewSizes.size() - 1;
 			Size size = previewSizes.get(lastOne);
 			if (size.width < previewWidth / 3 || size.height < previewHeight / 3) {
@@ -87,21 +92,21 @@ public class CameraHelper {
 				break;
 			}
 		}
-		while (picsizes.size() > 1) {//去除小于需要图片大小的的size
+		while (picsizes.size() > 1) {// 去除小于需要图片大小的的size
 			int lastOne = picsizes.size() - 1;
 			Size size = picsizes.get(lastOne);
 			if (size.width < picWidth || size.height < picHeight) {
 				picsizes.remove(lastOne);
-			} else {//也是移除掉比想拍摄的图片小的
+			} else {// 也是移除掉比想拍摄的图片小的
 				break;
 			}
 		}
 		TreeMap<Double, Size> preViewMap = new TreeMap<Double, Size>();
-		for (int i = 0; i < previewSizes.size(); i++) {//先放大的后放小的，如果比例相等用小的比例
+		for (int i = 0; i < previewSizes.size(); i++) {// 先放大的后放小的，如果比例相等用小的比例
 			Size size = previewSizes.get(i);
 			preViewMap.put((double) size.width / size.height, size);
 		}
-		for (Size size : picsizes) {//从可拍取图片宽高比差值最小的大小找 相等宽高比的预览大小
+		for (Size size : picsizes) {// 从可拍取图片宽高比差值最小的大小找 相等宽高比的预览大小
 			double key = (double) size.width / size.height;
 			if (preViewMap.containsKey(key)) {
 				picSize = size;
@@ -277,7 +282,7 @@ public class CameraHelper {
 							layoutParams = new RelativeLayout.LayoutParams(-1, -1);
 						}
 						float previewRadio = (float) previewSize.width / previewSize.height;
-						if (sufaceRadio > previewRadio) {//surface宽了，需要扩大高度
+						if (sufaceRadio > previewRadio) {// surface宽了，需要扩大高度
 							int desireHeight = (int) (width / previewRadio);
 							layoutParams.width = width;
 							layoutParams.height = desireHeight;
@@ -369,12 +374,13 @@ public class CameraHelper {
 
 	/**
 	 * 相机异常捕抓
-	 *
+	 * 
 	 * @author
 	 */
 	public static final class CameraonError implements Camera.ErrorCallback {
 
 		private final Activity context;
+		private static final String TAG = "CameraonError";
 
 		public CameraonError(Activity context) {
 			this.context = context;
@@ -384,11 +390,11 @@ public class CameraHelper {
 		public void onError(int error, Camera camera) {
 			if (error == Camera.CAMERA_ERROR_SERVER_DIED) {
 				Toast.makeText(context, "相机服务器启动失败", Toast.LENGTH_LONG).show();
-				LogUtils.e("CAMERA_ERROR_SERVER_DIED--相机服务器挂了");
+				LogUtils.e(TAG, "CAMERA_ERROR_SERVER_DIED--相机服务器挂了");
 
 			} else if (error == Camera.CAMERA_ERROR_UNKNOWN) {
 				Toast.makeText(context, "未知的相机错误", Toast.LENGTH_LONG).show();
-				LogUtils.e("CAMERA_ERROR_UNKNOWN--未知的相机错误");
+				LogUtils.e(TAG, "CAMERA_ERROR_UNKNOWN--未知的相机错误");
 			}
 		}
 	}
@@ -416,7 +422,8 @@ public class CameraHelper {
 			float Y = -values[_DATA_Y];
 			float Z = -values[_DATA_Z];
 			float magnitude = X * X + Y * Y;
-			// Don't trust the angle if the magnitude is small compared to the y value
+			// Don't trust the angle if the magnitude is small compared to the y
+			// value
 			if (magnitude * 4 >= Z * Z) {
 				float OneEightyOverPi = 57.29577957855f;
 				float angle = (float) Math.atan2(-Y, X) * OneEightyOverPi;

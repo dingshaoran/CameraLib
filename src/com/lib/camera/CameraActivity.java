@@ -58,14 +58,13 @@ import com.lib.utils.LogUtils;
  * RECT (Rect)所拍的图片裁剪掉四周大小<br/>
  * POINT (Point)所拍照保存下来的图片大小(裁剪后的)<br/>
  * UPLOAD (boolean)是不是要上传到服务器<br/>
- * ROTATE  (boolean)是否要旋转。<br/>
+ * ROTATE (boolean)是否要旋转。<br/>
  * <br/>
  * 返回值<br/>
  * MARK (int)拍图片带的一个标识，<br/>
  * URL (String[])如果设置上传为true，则有值<br/>
  * PATH (String[])返回的图片存储路径，<br/>
- * KEYWORD识别出来返回的数据map.fromjson
- * TIME (String[])每张图片拍摄的时间<br/>
+ * KEYWORD识别出来返回的数据map.fromjson TIME (String[])每张图片拍摄的时间<br/>
  * CODE (String[])每张图片拍摄的位置<br/>
  */
 @SuppressLint({ "ClickableViewAccessibility" })
@@ -82,6 +81,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 	public static final int FILTER_NO = -1;
 	private static final String PATH = "path";
 	private static final String NAME = "name";
+	private static final String TAG = "CameraActivity";
 	private final int CAMERA_SIZE = Camera.getNumberOfCameras();
 	private View tvRemake, tvCancel, tvSave, btnChange; // 重拍，保存,取消
 	private ImageView ivPhoto; // 显示照片的背景
@@ -109,9 +109,10 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		requestWindowFeature(Window.FEATURE_NO_TITLE);//去掉标题栏
+		requestWindowFeature(Window.FEATURE_NO_TITLE);// 去掉标题栏
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//去掉navigation bar
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {// 去掉navigation
+																	// bar
 			getWindow().getDecorView().setSystemUiVisibility(
 					View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 							| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -122,7 +123,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 		}
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);//去掉信息栏
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
 		final View root = View.inflate(this, R.layout.activity_lib_camera, null);
 		setContentView(root);
 		svPreView = (SurfaceView) findViewById(R.id.svPreView);
@@ -159,7 +160,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 		root.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
 
 			@Override
-			public void onGlobalLayout() {//对 surface 可见区域遮挡，使宽高比等于要获取图片的
+			public void onGlobalLayout() {// 对 surface 可见区域遮挡，使宽高比等于要获取图片的
 				root.getViewTreeObserver().removeGlobalOnLayoutListener(this);
 				float width = root.getWidth();
 				float height = root.getHeight();
@@ -167,12 +168,12 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 				LayoutParams lpBottom = (LayoutParams) tvBottom.getLayoutParams();
 				LayoutParams lpLeft = (LayoutParams) tvLeft.getLayoutParams();
 				LayoutParams lpRight = (LayoutParams) tvRight.getLayoutParams();
-				if (mWidth / width > mHeight / height) {//需要拍取的图片宽，当前的预览大小窄，压缩预览高度。
+				if (mWidth / width > mHeight / height) {// 需要拍取的图片宽，当前的预览大小窄，压缩预览高度。
 					float desireHeight = mHeight * width / mWidth;
 					int dh = (int) ((height - desireHeight) / 2);
 					lpTop.height = (dh);
 					lpBottom.height = (dh);
-				} else {//压缩宽度
+				} else {// 压缩宽度
 					float desireWidth = mWidth * height / mHeight;
 					int dw = (int) ((width - desireWidth) / 2);
 					lpLeft.width = (dw);
@@ -190,7 +191,8 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 	protected void onResume() {
 		super.onResume();
 		CameraHelper.registOrientation(this, this);
-		mCameraHelper.openCamera(mCameraPos);//官方文档说一定要在onResume 打开相机，在onPause 关闭相机否则可能导致无法使用
+		mCameraHelper.openCamera(mCameraPos);// 官方文档说一定要在onResume 打开相机，在onPause
+												// 关闭相机否则可能导致无法使用
 		showSurface(true);
 	}
 
@@ -284,7 +286,11 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 						(int) (top * mHeight / (layoutParams.height - top - bottom) + 0.5f),
 						(int) (rigtht * mWidth / (layoutParams.width - left - rigtht) + 0.5f),
 						(int) (bottom * mHeight / (layoutParams.height - top - bottom) + 0.5f));
-				mBitmap = ImageUtils.byte2Bitmap(data, mWidth, mHeight, mode);//裁剪图片，data 里是 surfaceview 的整个区域，mode 是可见区域外的要裁剪掉的部分
+				mBitmap = ImageUtils.byte2Bitmap(data, mWidth, mHeight, mode);// 裁剪图片，data
+																				// 里是
+																				// surfaceview
+																				// 的整个区域，mode
+																				// 是可见区域外的要裁剪掉的部分
 				showSurface(false);
 				savePicture();
 				showSurface(true);
@@ -299,7 +305,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 		try {
 			FileUtils.writeFile(ImageUtils.getSmallBitmap(mBitmap, 200), mPath, mName, false);
 		} catch (Throwable e) {
-			LogUtils.e(e);
+			LogUtils.e(TAG, e);
 			Toast.makeText(this, "内存不足，保存失败", Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -309,7 +315,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 	}
 
 	@Nullable
-	private String savePic2Gallery(String img) {//保存到相册，这个地方按照需要可以删掉，
+	private String savePic2Gallery(String img) {// 保存到相册，这个地方按照需要可以删掉，
 		Uri uri = FileUtils.copyImage2Gallery(this, img);
 		if (uri == null) {
 			Toast.makeText(this, "保存失败", Toast.LENGTH_LONG).show();
@@ -393,7 +399,7 @@ public class CameraActivity extends Activity implements View.OnClickListener, Se
 
 		@Override
 		public void onShutter() {
-			try {//init failed
+			try {// init failed
 				if (tone == null)
 					tone = new ToneGenerator(AudioManager.AUDIOFOCUS_REQUEST_GRANTED, ToneGenerator.MIN_VOLUME);
 				tone.startTone(ToneGenerator.TONE_PROP_BEEP);
